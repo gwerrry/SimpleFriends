@@ -1,13 +1,14 @@
+//todo docs
 package com.gwerry;
 
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.*;
-import com.gwerry.io.LocalDB;
+import java.lang.reflect.Field;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 
-import java.lang.reflect.Field;
+import com.gwerry.io.LocalDB;
 
 public class SimpleFriends extends JavaPlugin {
     private static SimpleFriends instance;

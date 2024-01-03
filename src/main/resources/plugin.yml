@@ -2,4 +2,5 @@ name: SimpleFriends
 main: com.gwerry.SimpleFriends
 version: "1.0"
 author: gwerry
+api: "1.20"
 api-version: 1.20

@@ -1,10 +1,10 @@
+//todo docs
 package com.gwerry;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
+
 import org.bukkit.entity.Player;
-import com.gwerry.Messages;
 
 public class CustomPlayer {
     private final Player player; // player object
@@ -39,7 +39,8 @@ public class CustomPlayer {
         PlayerManager.createFriendRequest(player.getUniqueId(), recieverPlayer.getUniqueId());
     }
 
-    public void kickFriend(String name);
+    //todo implement this
+    //public void kickFriend(String name);
 
     public boolean isFriend(CustomPlayer other) {
         return friends.contains(other.getPlayer().getUniqueId());

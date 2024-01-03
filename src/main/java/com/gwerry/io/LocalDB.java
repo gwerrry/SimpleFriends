@@ -1,3 +1,24 @@
+/**
+ * @file LocalDB.java
+ * @author gwerry
+ * @brief The LocalDB class is responsible for managing the local database operations for the SimpleFriends plugin.
+ * @version 1.0
+ * @date 2024/01/03
+ *
+ * Copyright 2024 gwerry
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.gwerry.io;
 
 import java.io.File;
@@ -9,6 +30,7 @@ import java.sql.Statement;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.UUID;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,6 +38,14 @@ import org.bukkit.entity.Player;
 import com.gwerry.CustomPlayer;
 import com.gwerry.SimpleFriends;
 
+/**
+ * @brief The LocalDB class is responsible for managing the local database operations for the SimpleFriends plugin.
+ * It provides methods to initialize and close the database connection, and to load player data from the database.
+ * The class uses Apache Commons DBCP for connection pooling and SQLite as the database.
+ *
+ * @author gwerry
+ * @since 1.0
+ */
 public class LocalDB {
 
     private final String SEP_DELIM = "|";
