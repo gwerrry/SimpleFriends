@@ -3,12 +3,15 @@ package com.gwerry;
 
 import java.lang.reflect.Field;
 
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 
 import com.gwerry.io.LocalDB;
+import com.gwerry.listeners.OnJoinListener;
+import com.gwerry.listeners.OnLeaveListener;
 
 public class SimpleFriends extends JavaPlugin {
     private static SimpleFriends instance;
@@ -24,13 +27,17 @@ public class SimpleFriends extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        System.out.println("hello");
+        getLogger().info("Registering listeners...");
+        PluginManager pman = Bukkit.getPluginManager();
+        pman.registerEvents(new OnJoinListener(), this);
+        pman.registerEvents(new OnLeaveListener(), this);
     }
 
     @Override
     public void onLoad() {
         instance = this;
         userData = new LocalDB("friends.db", this.getDataFolder().getAbsolutePath());
+        PlayerManager.init();
         //commands registered here
     }
 

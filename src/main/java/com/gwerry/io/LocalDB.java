@@ -104,10 +104,10 @@ public class LocalDB {
      */
     public CustomPlayer loadPlayer(UUID playerId) {
         CustomPlayer player = null;
-        String sql = "SELECT user_friends FROM users WHERE id = ?";
+        String selectSql = "SELECT user_friends FROM users WHERE id = ?";
 
         try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            PreparedStatement pstmt = conn.prepareStatement(selectSql);
 
             pstmt.setString(1, playerId.toString());
             ResultSet rs = pstmt.executeQuery();
@@ -115,10 +115,25 @@ public class LocalDB {
             if (rs.next()) {
                 String friendListStr = rs.getString("user_friends");
                 ArrayList<UUID> friendList = new ArrayList<>();
-                for (String friendIdStr : friendListStr.split(SEP_DELIM)) friendList.add(UUID.fromString(friendIdStr));
+
+                try{
+                    for (String friendIdStr : friendListStr.split(SEP_DELIM)) friendList.add(UUID.fromString(friendIdStr));
+                } catch(Exception e) {}
 
                 Player p = Bukkit.getPlayer(playerId);
                 player = new CustomPlayer(p, friendList);
+            } else {
+                // Player not found in the database, so insert a new player
+                String insertSql = "INSERT INTO users (id, user_friends) VALUES (?, ?)";
+                PreparedStatement insertStmt = conn.prepareStatement(insertSql);
+
+                insertStmt.setString(1, playerId.toString());
+                insertStmt.setString(2, "");  // Assuming no friends initially
+
+                insertStmt.executeUpdate();
+
+                Player p = Bukkit.getPlayer(playerId);
+                player = new CustomPlayer(p, new ArrayList<>());  // Assuming no friends initially
             }
 
             rs.close();
@@ -165,7 +180,6 @@ public class LocalDB {
      */
     public void savePlayerRemoveFriend(UUID toUpdate, UUID toRemove) {
         String getSQL = "SELECT user_friends FROM users WHERE id = ?";
-        String updateSQL = "UPDATE users SET user_friends = ? WHERE id = ?";
 
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(getSQL);
@@ -184,6 +198,7 @@ public class LocalDB {
                 }
 
                 // Update the friend list of the player
+                String updateSQL = "UPDATE users SET user_friends = ? WHERE id = ?";
                 pstmt = conn.prepareStatement(updateSQL);
                 pstmt.setString(1, friendListStr);
                 pstmt.setString(2, toUpdate.toString());
@@ -205,7 +220,6 @@ public class LocalDB {
      */
     public void savePlayerAddFriend(UUID toUpdate, UUID toAdd) {
         String getSQL = "SELECT user_friends FROM users WHERE id = ?";
-        String updateSQL = "UPDATE users SET user_friends = ? WHERE id = ?";
 
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement pstmt = conn.prepareStatement(getSQL);
@@ -221,6 +235,7 @@ public class LocalDB {
                 friendListStr += SEP_DELIM + toAddIdStr;
 
                 // Update the friend list of the player
+                String updateSQL = "UPDATE users SET user_friends = ? WHERE id = ?";
                 pstmt = conn.prepareStatement(updateSQL);
                 pstmt.setString(1, friendListStr);
                 pstmt.setString(2, toUpdate.toString());

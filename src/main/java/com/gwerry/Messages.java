@@ -35,6 +35,7 @@ public class Messages {
     public static String NO_PERMISSION = "§cNo permission. :(";
     public static String PLAYER_NOT_ONLINE = "§cThat player is not currently online.";
     public static String NOT_EVEN_POSSIBLE = "§4This LITERALLY should not be possible.";
+    public static String FRIEND_NOT_FOUND = "§cYou are not friends with that player.";
 
     public static String FRIEND_REQUEST_RECIEVER = "§aFriend request from §b%sender_name%§a. Type §b\"/friend accept/deny name\"§a.\nThis request expires in 120 seconds.";
     public static String FRIEND_REQUEST_SENDER = "§aSent §b%reciever_name%§a a friend request.";

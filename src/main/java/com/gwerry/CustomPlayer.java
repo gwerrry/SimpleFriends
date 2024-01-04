@@ -4,6 +4,7 @@ package com.gwerry;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class CustomPlayer {
@@ -39,8 +40,19 @@ public class CustomPlayer {
         PlayerManager.createFriendRequest(player.getUniqueId(), recieverPlayer.getUniqueId());
     }
 
-    //todo implement this
-    //public void kickFriend(String name);
+    public void kickFriend(String name) {
+        UUID id = UuidUtil.getUuid(name);
+        if(id == null) player.sendMessage(Messages.PLAYER_NOT_ONLINE.replace("%reciever_name%", name));
+
+        if(!friends.contains(id)) player.sendMessage(Messages.FRIEND_NOT_FOUND.replace("%reciever_name%", name));
+
+        friends.remove(id);
+        PlayerManager.updateFriendsRemove(id, this.player.getUniqueId());
+        savePlayerData();
+
+        if(PlayerManager.isOnline(id)) Bukkit.getPlayer(id).sendMessage(Messages.FRIEND_REMOVE.replace("%reciever_name%", name));
+        player.sendMessage(Messages.FRIEND_REMOVE.replace("%reciever_name%", name));
+    }
 
     public boolean isFriend(CustomPlayer other) {
         return friends.contains(other.getPlayer().getUniqueId());
