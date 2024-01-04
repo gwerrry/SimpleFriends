@@ -21,6 +21,8 @@
  */
 package com.gwerry;
 
+import java.util.ArrayList;
+
 /**
  * @brief The Messages class contains a bunch of static String that represent various messages used in the plugin.
  * These messages are used to communicate with the player in different situations such as when a player joins or leaves,
@@ -31,10 +33,14 @@ package com.gwerry;
  * @since 1.0
  */
 public class Messages {
+    public static String FRIEND_CMD = "friend";
+    public static ArrayList<String> FRIEND_CMD_ALIASES = new ArrayList<>();
     public static String ONLY_PLAYER_COMMAND = "§cThat command can not be executed by console.";
     public static String NO_PERMISSION = "§cNo permission. :(";
     public static String PLAYER_NOT_ONLINE = "§cThat player is not currently online.";
     public static String NOT_EVEN_POSSIBLE = "§4This LITERALLY should not be possible.";
+    public static String FRIEND_CMD_DESCRIPTION = "Simple friends command. Use \"/f help\" for a list of commands.";
+    public static String FRIEND_CMD_USAGE = "For usage info, use \"/f help\" for a list of commands.";
     public static String FRIEND_NOT_FOUND = "§cYou are not friends with that player.";
 
     public static String FRIEND_REQUEST_RECIEVER = "§aFriend request from §b%sender_name%§a. Type §b\"/friend accept/deny name\"§a.\nThis request expires in 120 seconds.";

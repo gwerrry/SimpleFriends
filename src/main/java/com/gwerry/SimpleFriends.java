@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 
+import com.gwerry.commands.FriendCommand;
 import com.gwerry.io.LocalDB;
 import com.gwerry.listeners.OnJoinListener;
 import com.gwerry.listeners.OnLeaveListener;
@@ -38,7 +39,10 @@ public class SimpleFriends extends JavaPlugin {
         instance = this;
         userData = new LocalDB("friends.db", this.getDataFolder().getAbsolutePath());
         PlayerManager.init();
+
         //commands registered here
+        Messages.FRIEND_CMD_ALIASES.add("f");
+        registerCommand(new FriendCommand(Messages.FRIEND_CMD, Messages.FRIEND_CMD_DESCRIPTION, Messages.FRIEND_CMD_USAGE, Messages.FRIEND_CMD_ALIASES));
     }
 
     @Override
