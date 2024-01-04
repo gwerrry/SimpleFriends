@@ -111,7 +111,20 @@ public class PlayerManager {
      * @param send The UUID of the player sending the request.
      * @param other The UUID of the player receiving the request.
      */
-    public static void createFriendRequest(UUID send, UUID other) {
+    public static boolean createFriendRequest(UUID send, UUID other) {
+        CustomPlayer sender = getPlayer(send);
+        CustomPlayer reciever = getPlayer(other);
+
+        if(getOutgoingFriendRequests(sender).contains(other)) {
+            sender.getPlayer().sendMessage(Messages.FRIEND_REQUEST_ALREADY_SENT.replace("%reciever_name%", reciever.getPlayer().getName()));
+            return false;
+        }
+
+        if(getIncomingFriendRequests(sender).contains(other)) {
+            sender.getPlayer().sendMessage(Messages.FRIEND_REQUEST_ALREADY_RECIEVED.replace("%reciever_name%", reciever.getPlayer().getName()));
+            return false;
+        }
+
         Pair<UUID, UUID> pair = new Pair<>(send, other);
         friendRequests.add(pair);
 
@@ -129,25 +142,23 @@ public class PlayerManager {
             }
         });
         thread.start();
+
+        return true;
     }
 
     /**
-     * @brief Retrieves the friend requests of a player.
+     * @brief Retrieves all of the incoming friend requests of a player.
      *
      * @param player The player whose friend requests to retrieve.
      * @return An ArrayList of UUIDs representing the friend requests of the player.
      */
-    public static ArrayList<UUID> getFriendRequests(CustomPlayer player) {
+    public static ArrayList<UUID> getIncomingFriendRequests(CustomPlayer player) {
         ArrayList<UUID> others = new ArrayList<>();
         UUID toSearch = player.getPlayer().getUniqueId();
 
         synchronized(friendRequests) {
             for(Pair<UUID, UUID> request : friendRequests) {
-                if(request.first == toSearch) {
-                    others.add(request.second);
-                    continue;
-                }
-                if(request.second == toSearch) {
+                if(request.second.equals(toSearch)) {
                     others.add(request.first);
                     continue;
                 }
@@ -155,6 +166,45 @@ public class PlayerManager {
         }
 
         return others;
+    }
+
+        /**
+     * @brief Retrieves all of the outgoing friend requests of a player.
+     *
+     * @param player The player whose friend requests to retrieve.
+     * @return An ArrayList of UUIDs representing the friend requests of the player.
+     */
+    public static ArrayList<UUID> getOutgoingFriendRequests(CustomPlayer player) {
+        ArrayList<UUID> others = new ArrayList<>();
+        UUID toSearch = player.getPlayer().getUniqueId();
+
+        synchronized(friendRequests) {
+            for(Pair<UUID, UUID> request : friendRequests) {
+                if(request.first.equals(toSearch)) {
+                    others.add(request.second);
+                    continue;
+                }
+            }
+        }
+
+        return others;
+    }
+
+    /**
+     * @brief Removes a friend request between the specified players.
+     *
+     * @param affected The UUID of the player who sent the request.
+     * @param toRemove The UUID of the player who recieved the request.
+     */
+    public static void removeRequest(UUID senderID, UUID recieverID) {
+        synchronized(friendRequests) {
+            for(Pair<UUID, UUID> request : friendRequests) {
+                if(request.first.equals(senderID) && request.second.equals(recieverID)) {
+                    friendRequests.remove(request);
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -173,8 +223,8 @@ public class PlayerManager {
      * @param affected The UUID of the player whose friends list to update.
      * @param toRemove The UUID of the friend to add.
      */
-    public static void updateFriendsAdd(UUID affected, UUID toRemove) {
-        db.savePlayerAddFriend(affected, toRemove);
+    public static void updateFriendsAdd(UUID affected, UUID toAdd) {
+        db.savePlayerAddFriend(affected, toAdd);
     }
 
     /**

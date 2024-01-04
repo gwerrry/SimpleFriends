@@ -1,0 +1,38 @@
+messages:
+  ONLY_PLAYER_COMMAND: "§cThat command can not be executed by console."
+  NO_PERMISSION: "§cNo permission. :("
+  PLAYER_NOT_ONLINE: "§cThat player is not currently online."
+  NOT_EVEN_POSSIBLE: "§4This LITERALLY should not be possible."
+  FRIEND_NOT_FOUND: "§cYou are not friends with that player."
+  PLAYER_NOT_EXISTS: "§cThat player does not exist."
+  FRIEND_REQUEST_RECIEVER: "§aFriend invite from §b%sender_name%§a. Type §b\"/friend accept/deny <name>\"§a.\nThis invite expires in 120 seconds."
+  FRIEND_REQUEST_SENDER: "§aSent §b%reciever_name%§a a friend invite."
+  FRIEND_REQUEST_ACCEPT: "§aYou are now friends with §b%sender_name%§a!"
+  FRIEND_REMOVE: "§cYou are no longer friends with §b%reciever_name%§c!"
+  ALREADY_FRIENDS: "§aYou are already friends with §b%reciever_name%§a!"
+  FRIEND_REQUEST_ALREADY_SENT: "§aYou already sent §b%reciever_name%§a a friend request."
+  FRIEND_REQUEST_ALREADY_RECIEVED: "§b%reciever_name%§a already sent you a friend request. Use §b\"/friend accept/deny <name>\" §ato accept or deny."
+  FRIEND_REQUEST_NOT_EXIST: "§cYou have no friend request from §b%reciever_name%§c."
+  FRIEND_REQUEST_DENY_SENDER: "§cRejected friend invite from §b%reciever_name%§c."
+  FRIEND_REQUEST_DENY_RECEIVER: "§cYour friend invite to §b%sender_name% §cwas rejected."
+  FRIEND_LIST: "§a>          §aFriends          §a<\n%friends%"
+  FRIEND_LIST_SINGLE: "§a> §b%friend_name%§a | %online_status%"
+  ONLINE_TEXT: "§aOnline"
+  OFFLINE_TEXT: "§cOffline"
+  CANT_FRIEND_SELF: "§cYou can't friend yourself."
+  FRIEND_JOIN: "§aYour friend §b%friend_name% §ajoined."
+  FRIEND_LEAVE: "§cYour friend §b%friend_name% §cleft."
+  FRIEND_HELP_TEXT: "§a>          §3SimpleFriends Commands        §a<\n§a> §b/friend help - Displays this help text.\n§a> §b/friend invite <player> - Sends a friend invite to the specified player. Only works if they are online.\n§a> §b/friend kick <player> - Removes the specified player from your friends list.\n§a> §b/friend list - Lists your friends\n§a>  You can also use /f instead of /friend  <"
+
+database:
+  max_connections: 30
+  initial_connections: 5
+  max_idle_connections: 15
+  min_idle_connections: 2
+
+friend_cmd:
+  COMMAND: "friend"
+  DESCRIPTION: "Simple friends command. Use \"/f help\" for a list of commands."
+  USAGE: "For usage info, use \"/f help\" for a list of commands."
+  FRIEND_CMD_ALIASES:
+    - "f"

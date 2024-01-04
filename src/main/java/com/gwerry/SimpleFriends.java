@@ -28,6 +28,9 @@ public class SimpleFriends extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Messages.FRIEND_CMD_ALIASES.add("f");
+        registerCommand(new FriendCommand(Messages.FRIEND_CMD, Messages.FRIEND_CMD_DESCRIPTION, Messages.FRIEND_CMD_USAGE, Messages.FRIEND_CMD_ALIASES));
+
         getLogger().info("Registering listeners...");
         PluginManager pman = Bukkit.getPluginManager();
         pman.registerEvents(new OnJoinListener(), this);
@@ -41,8 +44,6 @@ public class SimpleFriends extends JavaPlugin {
         PlayerManager.init();
 
         //commands registered here
-        Messages.FRIEND_CMD_ALIASES.add("f");
-        registerCommand(new FriendCommand(Messages.FRIEND_CMD, Messages.FRIEND_CMD_DESCRIPTION, Messages.FRIEND_CMD_USAGE, Messages.FRIEND_CMD_ALIASES));
     }
 
     @Override

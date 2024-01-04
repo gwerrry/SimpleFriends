@@ -49,6 +49,7 @@ import com.gwerry.SimpleFriends;
 public class LocalDB {
 
     private final String SEP_DELIM = "|";
+    private final String SEP_DELIM_SPLIT = "\\|";
     private final SimpleFriends plugin;
     private final Logger logger;
     private BasicDataSource dataSource;
@@ -116,9 +117,11 @@ public class LocalDB {
                 String friendListStr = rs.getString("user_friends");
                 ArrayList<UUID> friendList = new ArrayList<>();
 
-                try{
-                    for (String friendIdStr : friendListStr.split(SEP_DELIM)) friendList.add(UUID.fromString(friendIdStr));
-                } catch(Exception e) {}
+                for (String friendIdStr : friendListStr.split(SEP_DELIM_SPLIT)) {
+                    try{
+                        friendList.add(UUID.fromString(friendIdStr));
+                    }catch(Exception e) {}
+                }
 
                 Player p = Bukkit.getPlayer(playerId);
                 player = new CustomPlayer(p, friendList);
@@ -156,7 +159,6 @@ public class LocalDB {
         for(UUID friendUUID : player.getFriendList()) friendListBuilder.append(friendUUID.toString() + SEP_DELIM);
 
         String friendList = friendListBuilder.toString();
-        if(friendList.endsWith(SEP_DELIM)) friendList = friendList.substring(0, friendList.length() - 1);
 
         String sql = "UPDATE users SET user_friends = ? WHERE id = ?";
         try (Connection conn = dataSource.getConnection()) {
@@ -191,12 +193,8 @@ public class LocalDB {
                 String friendListStr = rs.getString("user_friends");
                 String toRemoveIdStr = toRemove.toString();
 
-                friendListStr += SEP_DELIM;
                 friendListStr = friendListStr.replace(toRemoveIdStr + SEP_DELIM, "");
-                if (friendListStr.endsWith(SEP_DELIM)) {
-                    friendListStr = friendListStr.substring(0, friendListStr.length() - 1);
-                }
-
+                if(!friendListStr.endsWith(SEP_DELIM)) friendListStr += SEP_DELIM;
                 // Update the friend list of the player
                 String updateSQL = "UPDATE users SET user_friends = ? WHERE id = ?";
                 pstmt = conn.prepareStatement(updateSQL);
@@ -232,7 +230,7 @@ public class LocalDB {
                 String toAddIdStr = toAdd.toString();
 
                 // Add the id of the friend
-                friendListStr += SEP_DELIM + toAddIdStr;
+                friendListStr += SEP_DELIM + toAddIdStr + SEP_DELIM;
 
                 // Update the friend list of the player
                 String updateSQL = "UPDATE users SET user_friends = ? WHERE id = ?";

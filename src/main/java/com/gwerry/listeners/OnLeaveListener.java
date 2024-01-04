@@ -58,7 +58,7 @@ public class OnLeaveListener implements Listener {
         String name = p.getName();
         for(UUID uuid : player.getFriendList()) {
             CustomPlayer other = PlayerManager.getPlayer(uuid);
-            if(other != null) other.getPlayer().sendMessage(Messages.FRIEND_LEAVE.replace("%sender_name%", name));
+            if(other != null) other.getPlayer().sendMessage(Messages.FRIEND_LEAVE.replace("%friend_name%", name));
         }
 
         PlayerManager.removePlayer(p.getUniqueId());

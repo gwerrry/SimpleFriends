@@ -57,7 +57,7 @@ public class OnJoinListener implements Listener {
 
         for(UUID uuid : player.getFriendList()) {
             CustomPlayer other = PlayerManager.getPlayer(uuid);
-            if(other != null) other.getPlayer().sendMessage(Messages.FRIEND_JOIN.replace("%sender_name%", name));
+            if(other != null) other.getPlayer().sendMessage(Messages.FRIEND_JOIN.replace("%friend_name%", name));
         }
     }
 }

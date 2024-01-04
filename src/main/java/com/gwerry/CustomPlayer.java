@@ -4,7 +4,6 @@ package com.gwerry;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class CustomPlayer {
@@ -34,23 +33,37 @@ public class CustomPlayer {
             return;
         }
 
-        player.sendMessage(Messages.FRIEND_REQUEST_SENDER.replace("%reciever_name%", recieverPlayer.getName()));
-        recieverPlayer.sendMessage(Messages.FRIEND_REQUEST_RECIEVER.replace("%sender_name%", player.getName()));
-
-        PlayerManager.createFriendRequest(player.getUniqueId(), recieverPlayer.getUniqueId());
+        boolean created = PlayerManager.createFriendRequest(player.getUniqueId(), recieverPlayer.getUniqueId());
+        if(created) {
+            player.sendMessage(Messages.FRIEND_REQUEST_SENDER.replace("%reciever_name%", recieverPlayer.getName()));
+            recieverPlayer.sendMessage(Messages.FRIEND_REQUEST_RECIEVER.replace("%sender_name%", player.getName()));
+        }
     }
 
     public void kickFriend(String name) {
         UUID id = UuidUtil.getUuid(name);
-        if(id == null) player.sendMessage(Messages.PLAYER_NOT_ONLINE.replace("%reciever_name%", name));
+        if(id == null) {
+             player.sendMessage(Messages.PLAYER_NOT_EXISTS);
+            return;
+        }
 
-        if(!friends.contains(id)) player.sendMessage(Messages.FRIEND_NOT_FOUND.replace("%reciever_name%", name));
+        if(!friends.contains(id)){
+            player.sendMessage(Messages.FRIEND_NOT_FOUND.replace("%reciever_name%", name));
+            return;
+        }
 
         friends.remove(id);
-        PlayerManager.updateFriendsRemove(id, this.player.getUniqueId());
+
         savePlayerData();
 
-        if(PlayerManager.isOnline(id)) Bukkit.getPlayer(id).sendMessage(Messages.FRIEND_REMOVE.replace("%reciever_name%", name));
+        CustomPlayer target = PlayerManager.getPlayer(id);
+        if(target != null) {
+            target.removeFriend(player.getUniqueId());
+            target.getPlayer().sendMessage(Messages.FRIEND_REMOVE.replace("%reciever_name%", player.getName()));
+        }
+
+        PlayerManager.updateFriendsRemove(id, player.getUniqueId());
+
         player.sendMessage(Messages.FRIEND_REMOVE.replace("%reciever_name%", name));
     }
 
@@ -58,8 +71,67 @@ public class CustomPlayer {
         return friends.contains(other.getPlayer().getUniqueId());
     }
 
-    public ArrayList<UUID> getFriendRequests() {
-        return PlayerManager.getFriendRequests(this);
+    public void acceptInvite(String name) {
+        UUID id = UuidUtil.getUuid(name);
+        if(id == null) {
+            player.sendMessage(Messages.PLAYER_NOT_EXISTS);
+            return;
+        }
+
+        if(!getIncomingFriendRequests().contains(id)) {
+            player.sendMessage(Messages.FRIEND_REQUEST_NOT_EXIST.replace("%reciever_name%", name));
+            return;
+        }
+
+        CustomPlayer target = PlayerManager.getPlayer(id);
+        if(target != null) {
+            target.addFriend(player.getUniqueId());
+            target.getPlayer().sendMessage(Messages.FRIEND_REQUEST_ACCEPT.replace("%sender_name%", player.getName()));
+        }
+
+        PlayerManager.updateFriendsAdd(id, player.getUniqueId());
+
+        addFriend(id);
+        savePlayerData();
+        player.sendMessage(Messages.FRIEND_REQUEST_ACCEPT.replace("%sender_name%", name));
+        PlayerManager.removeRequest(id, player.getUniqueId());
+    }
+
+    public void denyInvite(String name) {
+        UUID id = UuidUtil.getUuid(name);
+        if(id == null) {
+            player.sendMessage(Messages.PLAYER_NOT_EXISTS);
+            return;
+        }
+
+        if(!getIncomingFriendRequests().contains(id)) {
+            player.sendMessage(Messages.FRIEND_REQUEST_NOT_EXIST.replace("%reciever_name%", name));
+            return;
+        }
+
+        CustomPlayer target = PlayerManager.getPlayer(id);
+        if(target != null) {
+            target.getPlayer().sendMessage(Messages.FRIEND_REQUEST_DENY_RECEIVER.replace("%sender_name%", name));
+        }
+
+        player.sendMessage(Messages.FRIEND_REQUEST_DENY_SENDER.replace("%reciever_name%", name));
+
+        PlayerManager.removeRequest(id, player.getUniqueId());
+    }
+
+    public void addFriend(UUID other) {
+        friends.add(other);
+    }
+
+    public void removeFriend(UUID other) {
+        friends.remove(other);
+    }
+    public ArrayList<UUID> getIncomingFriendRequests() {
+        return PlayerManager.getIncomingFriendRequests(this);
+    }
+
+    public ArrayList<UUID> getOutgoingFriendRequests() {
+        return PlayerManager.getOutgoingFriendRequests(this);
     }
 
     public ArrayList<UUID> getFriendList() {
