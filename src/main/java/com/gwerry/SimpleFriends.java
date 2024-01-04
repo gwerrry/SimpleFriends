@@ -30,7 +30,7 @@ public class SimpleFriends extends JavaPlugin {
     @Override
     public void onLoad() {
         instance = this;
-        userData = new LocalDB(this.getDataFolder().getAbsolutePath(), "friends.db");
+        userData = new LocalDB("friends.db", this.getDataFolder().getAbsolutePath());
         //commands registered here
     }
 
