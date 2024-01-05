@@ -22,13 +22,7 @@ messages:
   CANT_FRIEND_SELF: "§cYou can't friend yourself."
   FRIEND_JOIN: "§aYour friend §b%friend_name% §ajoined."
   FRIEND_LEAVE: "§cYour friend §b%friend_name% §cleft."
-  FRIEND_HELP_TEXT: "§a>          §3SimpleFriends Commands        §a<\n§a> §b/friend help - Displays this help text.\n§a> §b/friend invite <player> - Sends a friend invite to the specified player. Only works if they are online.\n§a> §b/friend kick <player> - Removes the specified player from your friends list.\n§a> §b/friend list - Lists your friends\n§a>  You can also use /f instead of /friend  <"
-
-database:
-  max_connections: 30
-  initial_connections: 5
-  max_idle_connections: 15
-  min_idle_connections: 2
+  FRIEND_HELP_TEXT: "§a>          §3SimpleFriends Commands        §a<\n§a> §b/friend help - Displays this help text.\n§a> §b/friend invite <player> - Sends a friend invite to the specified player. Only works if they are online.\n§a> §b/friend kick <player> - Removes the specified player from your friends list.\n§a> §b/friend accept <player> - Accepts friend invite from player.\n§a> §b/friend deny <player> - Denys friend invite from player.\n§a> §b/friend list - Lists your friends\n§a>  You can also use /f instead of /friend  <"
 
 friend_cmd:
   COMMAND: "friend"
@@ -36,3 +30,9 @@ friend_cmd:
   USAGE: "For usage info, use \"/f help\" for a list of commands."
   FRIEND_CMD_ALIASES:
     - "f"
+
+database:
+  max_connections: 30
+  initial_connections: 5
+  max_idle_connections: 15
+  min_idle_connections: 2

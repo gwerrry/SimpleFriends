@@ -22,8 +22,10 @@
 package com.gwerry.listeners;
 
 import com.gwerry.CustomPlayer;
-import com.gwerry.Messages;
+import com.gwerry.Data;
 import com.gwerry.PlayerManager;
+import com.gwerry.utils.NameTagUtil;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -57,7 +59,11 @@ public class OnJoinListener implements Listener {
 
         for(UUID uuid : player.getFriendList()) {
             CustomPlayer other = PlayerManager.getPlayer(uuid);
-            if(other != null) other.getPlayer().sendMessage(Messages.FRIEND_JOIN.replace("%friend_name%", name));
+            if(other != null) other.getPlayer().sendMessage(Data.FRIEND_JOIN.replace("%friend_name%", name));
+        }
+
+        for(CustomPlayer asd : PlayerManager.getPlayers().values()) {
+            NameTagUtil.hideNameTag(player, asd);
         }
     }
 }

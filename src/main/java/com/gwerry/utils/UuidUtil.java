@@ -1,4 +1,4 @@
-package com.gwerry;
+package com.gwerry.utils;
 
 import java.io.InputStream;
 import java.net.URI;

@@ -12,7 +12,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import com.gwerry.CustomPlayer;
-import com.gwerry.Messages;
+import com.gwerry.Data;
 import com.gwerry.PlayerManager;
 import com.gwerry.SimpleFriends;
 
@@ -27,13 +27,13 @@ public class FriendCommand extends Command {
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         if(sender instanceof ConsoleCommandSender) {
-            plugin.getLogger().info(Messages.ONLY_PLAYER_COMMAND);
+            plugin.getLogger().info(Data.ONLY_PLAYER_COMMAND);
             return true;
         }
         Player sendPlayer = (Player)sender;
         CustomPlayer senderCustomPlayer = PlayerManager.getPlayer(sendPlayer.getUniqueId());
         if(args.length == 0) {
-            sendPlayer.sendMessage(Messages.FRIEND_HELP_TEXT);
+            sendPlayer.sendMessage(Data.FRIEND_HELP_TEXT);
             return true;
         }
 
@@ -41,20 +41,20 @@ public class FriendCommand extends Command {
         // no arg commands
         //
         if(args[0].equalsIgnoreCase("help")) {
-            sendPlayer.sendMessage(Messages.FRIEND_HELP_TEXT);
+            sendPlayer.sendMessage(Data.FRIEND_HELP_TEXT);
             return true;
         }
 
         else if(args[0].equalsIgnoreCase("list")) {
-            String toSend = Messages.FRIEND_LIST;
+            String toSend = Data.FRIEND_LIST;
             StringBuilder friendList = new StringBuilder();
             ArrayList<UUID> uuids = senderCustomPlayer.getFriendList();
 
             for(UUID uuid : uuids) {
                 OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
-                String toAppend = Messages.FRIEND_LIST_SINGLE.replace("%friend_name%", p.getName());
-                if(p.isOnline()) friendList.append(toAppend.replace("%online_status%", Messages.ONLINE_TEXT) + "\n");
-                else friendList.append(toAppend.replace("%online_status%", Messages.OFFLINE_TEXT) + "\n");
+                String toAppend = Data.FRIEND_LIST_SINGLE.replace("%friend_name%", p.getName());
+                if(p.isOnline()) friendList.append(toAppend.replace("%online_status%", Data.ONLINE_TEXT) + "\n");
+                else friendList.append(toAppend.replace("%online_status%", Data.OFFLINE_TEXT) + "\n");
             }
             sendPlayer.sendMessage(toSend.replace("%friends%", friendList.toString()));
 
@@ -66,14 +66,14 @@ public class FriendCommand extends Command {
         //
 
         if(args.length != 2) {
-            sendPlayer.sendMessage(Messages.FRIEND_CMD_USAGE);
+            sendPlayer.sendMessage(Data.FRIEND_CMD_USAGE);
             return true;
         }
 
         if(args[0].equalsIgnoreCase("invite")) {
             Player p = Bukkit.getPlayer(args[1]);
             if(p == null) {
-                sendPlayer.sendMessage(Messages.PLAYER_NOT_ONLINE);
+                sendPlayer.sendMessage(Data.PLAYER_NOT_ONLINE);
                 return true;
             }
 
@@ -86,7 +86,7 @@ public class FriendCommand extends Command {
         } else if (args[0].equalsIgnoreCase("deny")) {
             senderCustomPlayer.denyInvite(args[1]);
         } else {
-            sendPlayer.sendMessage(Messages.FRIEND_CMD_USAGE);
+            sendPlayer.sendMessage(Data.FRIEND_CMD_USAGE);
         }
 
         return true;

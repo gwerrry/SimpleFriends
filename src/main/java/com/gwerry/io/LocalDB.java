@@ -36,6 +36,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.gwerry.CustomPlayer;
+import com.gwerry.Data;
 import com.gwerry.SimpleFriends;
 
 /**
@@ -65,16 +66,24 @@ public class LocalDB {
         logger = plugin.getLogger();
 
         File pathFolder = new File(path);
-        if(!pathFolder.exists()) pathFolder.mkdirs();
+
+        if (!(pathFolder.exists()) && !pathFolder.mkdirs()) {
+            Bukkit.getServer().shutdown();
+        }
 
         File dbFile = new File(path, name);
 
         dataSource = new BasicDataSource();
         dataSource.setUrl("jdbc:sqlite:" + dbFile.getAbsolutePath());
-        dataSource.setInitialSize(5);
-        dataSource.setMaxTotal(30);
-        dataSource.setMaxIdle(15);
-        dataSource.setMinIdle(2);
+        dataSource.setInitialSize(Data.DB_INITIAL_CONNECTIONS);
+        dataSource.setMaxTotal(Data.DB_MAX_CONNECTIONS);
+        dataSource.setMaxIdle(Data.DB_MAX_IDLE_CONNECTIONS);
+        dataSource.setMinIdle(Data.DB_MIN_IDLE_CONNECTIONS);
+
+        logger.info("Database initial connections: " + Data.DB_INITIAL_CONNECTIONS);
+        logger.info("Database max connections: " + Data.DB_MAX_CONNECTIONS);
+        logger.info("Database max idle connections: " + Data.DB_MAX_IDLE_CONNECTIONS);
+        logger.info("Database min idle connections: " + Data.DB_MIN_IDLE_CONNECTIONS);
 
         try (Connection conn = dataSource.getConnection()) {
             fillDefaultDB(conn);

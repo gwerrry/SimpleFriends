@@ -19,7 +19,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.gwerry;
+package com.gwerry.utils;
 
 /**
  * @brief The Pair class represents a generic pair of two objects.

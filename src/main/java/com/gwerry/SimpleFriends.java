@@ -1,6 +1,7 @@
 //todo docs
 package com.gwerry;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 
 import org.bukkit.plugin.PluginManager;
@@ -10,13 +11,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 
 import com.gwerry.commands.FriendCommand;
+import com.gwerry.io.IYamlConfig;
 import com.gwerry.io.LocalDB;
+import com.gwerry.io.YamlConfig;
 import com.gwerry.listeners.OnJoinListener;
 import com.gwerry.listeners.OnLeaveListener;
 
 public class SimpleFriends extends JavaPlugin {
     private static SimpleFriends instance;
     private static LocalDB userData;
+    private static IYamlConfig config;
 
     public static SimpleFriends getInstance() {
         return instance;
@@ -26,10 +30,14 @@ public class SimpleFriends extends JavaPlugin {
         return userData;
     }
 
+    public static IYamlConfig getConfigFile() {
+        return config;
+    }
+
     @Override
     public void onEnable() {
-        Messages.FRIEND_CMD_ALIASES.add("f");
-        registerCommand(new FriendCommand(Messages.FRIEND_CMD, Messages.FRIEND_CMD_DESCRIPTION, Messages.FRIEND_CMD_USAGE, Messages.FRIEND_CMD_ALIASES));
+        Data.FRIEND_CMD_ALIASES.add("f");
+        registerCommand(new FriendCommand(Data.FRIEND_CMD, Data.FRIEND_CMD_DESCRIPTION, Data.FRIEND_CMD_USAGE, Data.FRIEND_CMD_ALIASES));
 
         getLogger().info("Registering listeners...");
         PluginManager pman = Bukkit.getPluginManager();
@@ -40,10 +48,16 @@ public class SimpleFriends extends JavaPlugin {
     @Override
     public void onLoad() {
         instance = this;
+
+        try {
+            config = new YamlConfig(this, "config.yml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Data.loadFromFile(config);
+
         userData = new LocalDB("friends.db", this.getDataFolder().getAbsolutePath());
         PlayerManager.init();
-
-        //commands registered here
     }
 
     @Override

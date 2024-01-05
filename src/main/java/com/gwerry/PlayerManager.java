@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import com.gwerry.io.LocalDB;
+import com.gwerry.utils.Pair;
 
 /**
  * @brief The PlayerManager class is responsible for managing players in the SimpleFriends plugin.
@@ -41,7 +42,6 @@ public class PlayerManager {
     private static HashMap<UUID, CustomPlayer> players = new HashMap<>();
     private static LocalDB db;
     private static List<Pair<UUID, UUID>> friendRequests = Collections.synchronizedList(new ArrayList<>());
-
 
     /**
      * @brief Initializes the PlayerManager by getting the database instance from the SimpleFriends plugin.
@@ -79,7 +79,10 @@ public class PlayerManager {
     public static CustomPlayer addPlayer(UUID uuid) {
         CustomPlayer player = db.loadPlayer(uuid);
         if(player.getPlayer() == null) throw new NullPointerException("Player is null. UUID: " + uuid);
+
+        //todo make thread safe
         players.putIfAbsent(uuid, player);
+
         return player;
     }
 
@@ -116,12 +119,12 @@ public class PlayerManager {
         CustomPlayer reciever = getPlayer(other);
 
         if(getOutgoingFriendRequests(sender).contains(other)) {
-            sender.getPlayer().sendMessage(Messages.FRIEND_REQUEST_ALREADY_SENT.replace("%reciever_name%", reciever.getPlayer().getName()));
+            sender.getPlayer().sendMessage(Data.FRIEND_REQUEST_ALREADY_SENT.replace("%reciever_name%", reciever.getPlayer().getName()));
             return false;
         }
 
         if(getIncomingFriendRequests(sender).contains(other)) {
-            sender.getPlayer().sendMessage(Messages.FRIEND_REQUEST_ALREADY_RECIEVED.replace("%reciever_name%", reciever.getPlayer().getName()));
+            sender.getPlayer().sendMessage(Data.FRIEND_REQUEST_ALREADY_RECIEVED.replace("%reciever_name%", reciever.getPlayer().getName()));
             return false;
         }
 
