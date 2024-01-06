@@ -22,10 +22,11 @@
 package com.gwerry;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.gwerry.io.LocalDB;
 import com.gwerry.utils.Pair;
@@ -39,7 +40,7 @@ import com.gwerry.utils.Pair;
  * @since 1.0
  */
 public class PlayerManager {
-    private static HashMap<UUID, CustomPlayer> players = new HashMap<>();
+    private static Map<UUID, CustomPlayer> players = new ConcurrentHashMap<>();
     private static LocalDB db;
     private static List<Pair<UUID, UUID>> friendRequests = Collections.synchronizedList(new ArrayList<>());
 
@@ -53,9 +54,9 @@ public class PlayerManager {
     /**
      * @brief Retrieves all online players.
      *
-     * @return A HashMap of all online players.
+     * @return A Map of all online players.
      */
-    public static HashMap<UUID, CustomPlayer> getPlayers() {
+    public static Map<UUID, CustomPlayer> getPlayers() {
         return players;
     }
 

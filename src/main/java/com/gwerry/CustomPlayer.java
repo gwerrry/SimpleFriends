@@ -128,6 +128,7 @@ public class CustomPlayer {
     public void removeFriend(UUID other) {
         friends.remove(other);
     }
+
     public ArrayList<UUID> getIncomingFriendRequests() {
         return PlayerManager.getIncomingFriendRequests(this);
     }
