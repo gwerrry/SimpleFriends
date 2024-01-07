@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.gwerry.io.LocalDB;
 import com.gwerry.utils.Pair;
@@ -40,7 +41,7 @@ import com.gwerry.utils.Pair;
  * @since 1.0
  */
 public class PlayerManager {
-    private static Map<UUID, CustomPlayer> players = new ConcurrentHashMap<>();
+    private static ConcurrentMap<UUID, CustomPlayer> players = new ConcurrentHashMap<>();
     private static LocalDB db;
     private static List<Pair<UUID, UUID>> friendRequests = Collections.synchronizedList(new ArrayList<>());
 
@@ -80,10 +81,9 @@ public class PlayerManager {
     public static CustomPlayer addPlayer(UUID uuid) {
         CustomPlayer player = db.loadPlayer(uuid);
         if(player.getPlayer() == null) throw new NullPointerException("Player is null. UUID: " + uuid);
-
-        //todo make thread safe
-        players.putIfAbsent(uuid, player);
-
+        synchronized (players) {
+            players.putIfAbsent(uuid, player);
+        }
         return player;
     }
 
@@ -93,9 +93,11 @@ public class PlayerManager {
      * @param uuid The UUID of the player to remove.
      */
     public static void removePlayer(UUID uuid) {
-        if(players.containsKey(uuid)) {
-            savePlayer(players.get(uuid));
-            players.remove(uuid);
+        synchronized (players) {
+            if(players.containsKey(uuid)) {
+                savePlayer(players.get(uuid));
+                players.remove(uuid);
+            }
         }
     }
 
