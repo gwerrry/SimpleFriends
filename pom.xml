@@ -8,11 +8,6 @@
     <artifactId>SimpleFriends</artifactId>
     <version>1.0</version>
 
-    <properties>
-        <maven.compiler.target>21</maven.compiler.target>
-        <maven.compiler.source>21</maven.compiler.source>
-    </properties>
-
     <build>
         <plugins>
             <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
